@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: print-logger-pod
+  namespace: monitoring
+spec:
+  containers:
+  - name: print-logger-container
+    image: iamgovindthakur/print-logger:latest

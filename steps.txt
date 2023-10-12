@@ -1,0 +1,25 @@
+1. Create a monitoring namespace
+
+kubectl create namespace monitoring
+
+#If You want to modify the print-logger image then you can modify the script.py and re-build image 
+	docker build -t iamgovindthakur/print-logger:latest .
+	docker push iamgovindthakur/print-logger:latest
+
+2. Create a POD which will generate logs, which we will be shiping to logio via fluentd
+kubectl apply -f print-logger-pod.yaml
+
+3. Store your Logz.io credentials
+Save your Logz.io shipping credentials as a Kubernetes secret.
+
+kubectl create secret generic logzio-logs-secret --from-literal=logzio-log-shipping-token='vQyHVIThPMYJALrbNstlqeoVvFeicJbC' --from-literal=logzio-log-listener='https://listener.logz.io:8071' -n monitoring
+
+#Comment replace the above token with your logzio token
+
+4. Deploy the DaemonSet
+For an RBAC cluster:
+
+kubectl apply -f https://raw.githubusercontent.com/logzio/logzio-k8s/master/logzio-daemonset-rbac.yaml -f https://raw.githubusercontent.com/logzio/logzio-k8s/master/configmap.yaml
+
+
+kubectl get pods -n monitoring
